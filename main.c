@@ -99,8 +99,6 @@ int main(int argc, char **argv) {
   }
   globfree(&globbuf);
   printf("indexing complete!!\n");
-
-  // main interaction loop
   bool done = false;
   char cmdbuf[140];
   ll_string *resultlist = NULL;

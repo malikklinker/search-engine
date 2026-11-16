@@ -1,68 +1,40 @@
 #include "string_list.h"
 #include "string_set.h"
+#include <assert.h>
+#include <string.h>
 
-#include <stdbool.h>
-#include <stdio.h>
-
-static int failures;
-
-void should_be_exactly_equal(const char *message, bool expected, bool actual) {
-  failures += expected != actual;
-  printf("%s\n", message);
-  printf("%s: wanted %d, got %d\n",
-         (expected == actual) ? "SUCCESS" : "FAILURE", expected, actual);
+static void expect_entries(string_set *set, const char **expected,
+                           size_t count) {
+  ll_string *entries = list_entries(set), *entry = entries;
+  for (size_t i = 0; i < count; ++i) {
+    assert(entry && !strcmp(entry->value, expected[i]));
+    entry = entry->next;
+  }
+  assert(!entry);
+  free_list(entries);
 }
 
 int main(void) {
-  string_set *myset = make_empty_set();
+  string_set *set = add(add(NULL, "hello"), "avocado");
+  assert(contains(set, "hello") && contains(set, "avocado"));
+  assert(!contains(set, "dimetrodon"));
+  set = add(set, "dimetrodon");
+  assert(contains(set, "dimetrodon"));
+  const char *initial[] = {"avocado", "dimetrodon", "hello"};
+  expect_entries(set, initial, 3);
+  free_set(set);
 
-  myset = add(myset, "hello");
-  myset = add(myset, "avocado");
-  should_be_exactly_equal("set has 'hello'", true, contains(myset, "hello"));
-  should_be_exactly_equal("set has 'avocado'", true,
-                          contains(myset, "avocado"));
-  should_be_exactly_equal("set does not have 'dimetrodon'", false,
-                          contains(myset, "dimetrodon"));
-
-  myset = add(myset, "dimetrodon");
-  should_be_exactly_equal("set should now have 'dimetrodon'", true,
-                          contains(myset, "dimetrodon"));
-
-  printf("should print 'hello', 'avocado' and 'dimetrodon' in some order\n");
-  ll_string *entries = list_entries(myset);
-  for (ll_string *here = entries; here; here = here->next) {
-    printf("%s\n", here->value);
-  }
-  free_list(entries);
-  free_set(myset);
-
-  string_set *animals = make_empty_set();
-  animals = add(animals, "kitty");
-  animals = add(animals, "lizard");
-  string_set *fluffy = make_empty_set();
-  fluffy = add(fluffy, "cloud");
-  fluffy = add(fluffy, "pillow");
-  fluffy = add(fluffy, "kitty");
-
-  string_set *animal_fluffy_intersection = set_intersection(animals, fluffy);
-  entries = list_entries(animal_fluffy_intersection);
-  printf("should print 'kitty'\n");
-  for (ll_string *here = entries; here; here = here->next) {
-    printf("%s\n", here->value);
-  }
-  free_set(animal_fluffy_intersection);
-  free_list(entries);
-
-  string_set *animal_fluffy_union = set_union(animals, fluffy);
-  entries = list_entries(animal_fluffy_union);
-  printf("should print 'kitty' 'lizard' 'cloud' 'pillow' in some order\n");
-  for (ll_string *here = entries; here; here = here->next) {
-    printf("%s\n", here->value);
-  }
-  free_set(animal_fluffy_union);
-  free_list(entries);
-
+  string_set *animals = add(add(NULL, "kitty"), "lizard");
+  string_set *fluffy = add(add(add(NULL, "cloud"), "pillow"), "kitty");
+  string_set *intersection = set_intersection(animals, fluffy);
+  const char *common[] = {"kitty"};
+  expect_entries(intersection, common, 1);
+  string_set *combined = set_union(animals, fluffy);
+  const char *all[] = {"cloud", "kitty", "lizard", "pillow"};
+  expect_entries(combined, all, 4);
+  free_set(intersection);
+  free_set(combined);
   free_set(animals);
   free_set(fluffy);
-  return failures ? 1 : 0;
+  return 0;
 }

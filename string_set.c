@@ -82,8 +82,6 @@ string_set *set_union(string_set *set_a, string_set *set_b) {
   result = add_all(result, set_b);
   return result;
 }
-// im making a helper because I want to recurse with a destination as well not
-// just set a and b
 string_set *intersect_helper(string_set *destination, string_set *set_a,
                              string_set *set_b) {
   if (!set_a) {

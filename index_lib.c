@@ -21,19 +21,14 @@ unsigned long djb_hash(char *str) {
   }
   return hash;
 }
-
-// Find the first newline in the input and replace it with \0
 void chomp(char *s) {
   for (int i = 0; s[i]; i++) {
     if (s[i] == '\n' || s[i] == '\r') {
-      // Check for \r in case we're on Windows or a very old Mac??
       s[i] = '\0';
       break;
     }
   }
 }
-
-// string utilities
 void lowercase(char *s) {
   size_t len = strlen(s);
   for (size_t i = 0; i < len; i++) {

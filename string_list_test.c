@@ -1,30 +1,21 @@
 #include "string_list.h"
-
-#include <stdio.h>
+#include <assert.h>
+#include <string.h>
 
 int main(void) {
-
-  ll_string *list1 = NULL;
-
-  list1 = cons("everybody", list1);
-  list1 = cons("afternoon", list1);
-  list1 = cons("good", list1);
-
-  ll_string *list2 = NULL;
-  list2 = cons("searchtown", list2);
-  list2 = cons("to", list2);
-  list2 = cons("welcome", list2);
-
-  list1 = extend(list1, list2);
-  printf("about to print:\n");
-  printf("good afternoon everybody welcome to searchtown \n");
-  for (ll_string *here = list1; here; here = here->next) {
-    printf("%s ", here->value);
+  ll_string *left = cons("good", cons("afternoon", cons("everybody", NULL)));
+  ll_string *right = cons("welcome", cons("to", cons("searchtown", NULL)));
+  left = extend(left, right);
+  char *expected[] = {"good",    "afternoon", "everybody",
+                      "welcome", "to",        "searchtown"};
+  for (size_t i = 0; i < sizeof(expected) / sizeof(expected[0]); ++i) {
+    ll_string *entry = get_element(left, i);
+    assert(entry && !strcmp(entry->value, expected[i]));
   }
-  printf("\n");
-
-  free_list(list1);
-  free_list(list2);
-
+  assert(get_element(left, 6) == NULL);
+  assert(get_element(left, 3) != right);
+  assert(get_element(left, 3)->value != right->value);
+  free_list(left);
+  free_list(right);
   return 0;
 }
