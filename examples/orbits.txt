@@ -1,0 +1,6 @@
+From: demo@example.invalid
+Subject: Orbit integration
+Message-ID: <orbits@example.invalid>
+Newsgroups: science.physics
+
+Gravity and orbit integration use velocity Verlet. Energy and momentum help check the simulation.

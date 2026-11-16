@@ -1,0 +1,6 @@
+From: demo@example.invalid
+Subject: Searching documents
+Message-ID: <search@example.invalid>
+Newsgroups: software.tools
+
+An inverted index supports fast document search. Boolean queries combine matching terms.

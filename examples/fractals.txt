@@ -1,0 +1,6 @@
+From: demo@example.invalid
+Subject: Fractal rendering
+Message-ID: <fractals@example.invalid>
+Newsgroups: science.math
+
+Mandelbrot and Julia fractals use complex iteration. Numerical simulation can produce beautiful images.
