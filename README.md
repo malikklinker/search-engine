@@ -1,4 +1,4 @@
-# Usenet search engine
+# Search engine
 
 An in-memory search engine in C with an inverted index, hash-based lookups, binary search tree sets, stop-word filtering, and Boolean AND/OR queries.
 
